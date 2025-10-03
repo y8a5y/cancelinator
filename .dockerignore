@@ -1,3 +1,6 @@
 venv/
 .git/
+.github/
 .gitignore
+.env*
+Dockerfile
