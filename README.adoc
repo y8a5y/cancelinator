@@ -1,0 +1,3 @@
+# Cancelinator
+
+A discord bot to cancel anyone you disagree with (as a joke).
