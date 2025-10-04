@@ -40,8 +40,13 @@ async def cancel(ctx, target, reason):
     avatar.save(bytes, format="PNG")
     bytes.seek(0)
 
+    if ctx.author.id == target.id:
+        tag_msg = f"<@{ctx.author.id}> s'est auto-cancel."
+    else:
+        tag_msg = f"<@{ctx.author.id}> a cancel <@{target.id}>.",
+
     await ctx.respond(
-        f"<@{ctx.author.id}> a cancel <@{target.id}>.\nRaison invoquée : {reason}",
+        tag_msg + f"\nRaison invoquée : {reason}",
         file=discord.File(bytes, filename="canceled.png")
     )
 
