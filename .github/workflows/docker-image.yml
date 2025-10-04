@@ -2,12 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-env:
-  TZ: Europe/Paris
+    tags: [ v* ]
 
 jobs:
   build:
@@ -15,8 +10,4 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image
-      run: |
-        date=$(date +%s)
-        day=$(date -d "@$date" +%Y-%m-%d)
-        discr=$(date -d "@$date" "+(%H*60+%M)*60+%S" | bc)
-        docker build . --file Dockerfile --tag bot.cancelinator:$day.$discr
+      run: docker build --file Dockerfile --tag bot.cancelinator:$GITHUB_REF_NAME .
