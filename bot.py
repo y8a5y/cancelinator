@@ -1,10 +1,8 @@
-import os, re, dotenv, discord, requests
-from PIL import Image, ImageOps
-from io import BytesIO
+import os, dotenv, discord
 from discord import option, ApplicationContext as Context, Message
+from src.cancel_utils import generate_response, edit_avatar
 
 bot = discord.Bot()
-overlay = Image.open(r"assets/cancel.png").convert("RGBA")
 
 @bot.slash_command(
     name="cancel",
@@ -24,30 +22,12 @@ overlay = Image.open(r"assets/cancel.png").convert("RGBA")
     max_length=300
 )
 async def cancel(ctx, target, reason):
-    avatar = Image.open(requests.get(target.avatar, stream=True).raw)
-
-    # L mode converts to greyscale
-    # then back to RGBA so overlay doesn't get greyscaled
-    avatar = avatar \
-        .convert("L") \
-        .convert("RGBA") \
-        .resize((256, 256))
-
-    avatar.paste(overlay, mask=overlay)
-
-    # saving to bytes
-    bytes = BytesIO()
-    avatar.save(bytes, format="PNG")
-    bytes.seek(0)
-
-    if ctx.author.id == target.id:
-        tag_msg = f"<@{ctx.author.id}> s'est auto-cancel."
-    else:
-        tag_msg = f"<@{ctx.author.id}> a cancel <@{target.id}>."
+    response_msg = generate_response(ctx.author.id, target.id, reason)
+    avatar_file = discord.File(edit_avatar(target.avatar), filename="canceled.png")
 
     await ctx.respond(
-        tag_msg + f"\nRaison invoquée : {reason}",
-        file=discord.File(bytes, filename="canceled.png")
+        content=response_msg,
+        file=avatar_file,
     )
 
 @bot.event
