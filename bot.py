@@ -1,6 +1,6 @@
 import os, dotenv, discord
 from discord import option, ApplicationContext as Context, Message
-from src.cancel_utils import generate_response, edit_avatar
+from src.utils import generate_response, edit_avatar
 
 bot = discord.Bot()
 
